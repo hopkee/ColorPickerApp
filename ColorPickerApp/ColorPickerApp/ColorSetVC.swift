@@ -18,6 +18,20 @@ protocol ColorTransfer: AnyObject {
     func changeColor(_ color: ColorSettings)
 }
 
+// Extension for VC to hide keyboard
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+// Convert UIColor to hex
 extension UIColor {
     func toHexString() -> String {
         var r:CGFloat = 0
@@ -42,6 +56,7 @@ extension UIColor {
 
 }
 
+// Convert HEX to UIColor
 extension UIColor {
     public convenience init?(hex: String) {
         let r, g, b, a: CGFloat
@@ -50,15 +65,15 @@ extension UIColor {
             let start = hex.index(hex.startIndex, offsetBy: 1)
             let hexColor = String(hex[start...])
 
-            if hexColor.count == 8 {
+            if hexColor.count == 6 {
                 let scanner = Scanner(string: hexColor)
                 var hexNumber: UInt64 = 0
 
                 if scanner.scanHexInt64(&hexNumber) {
-                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
-                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
-                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
-                    a = CGFloat(hexNumber & 0x000000ff) / 255
+                    r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
+                    g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
+                    b = CGFloat((hexNumber & 0x0000ff) >> 2) / 255
+                    a = CGFloat(hexNumber & 0x000000) / 255
 
                     self.init(red: r, green: g, blue: b, alpha: a)
                     return
@@ -70,7 +85,7 @@ extension UIColor {
     }
 }
 
-class ColorSetVC: UIViewController{
+final class ColorSetVC: UIViewController {
        
     // Lifecycle func
     override func viewDidLoad() {
@@ -78,6 +93,7 @@ class ColorSetVC: UIViewController{
         setMainView()
         setColors()
         setPreview()
+        self.hideKeyboardWhenTappedAround()
     }
     
     // Delegates
@@ -87,62 +103,63 @@ class ColorSetVC: UIViewController{
     var currentColors: ColorSettings?
 
     // Outlets
-    @IBOutlet weak var mainView: UIView!
-    @IBOutlet weak var redColorField: UITextField!
-    @IBOutlet weak var greenColorField: UITextField!
-    @IBOutlet weak var blueColorField: UITextField!
-    @IBOutlet weak var hexColorField: UITextField!
-    @IBOutlet weak var opacityFiled: UITextField!
-    @IBOutlet weak var previewColor: UIView!
-    @IBOutlet weak var redColorSlider: UISlider!
-    @IBOutlet weak var greenColorSlider: UISlider!
-    @IBOutlet weak var blueColorSlider: UISlider!
-    @IBOutlet weak var opacitySlider: UISlider!
+    @IBOutlet weak private var mainView: UIView!
+    @IBOutlet weak private var redColorField: UITextField!
+    @IBOutlet weak private var greenColorField: UITextField!
+    @IBOutlet weak private var blueColorField: UITextField!
+    @IBOutlet weak private var hexColorField: UITextField!
+    @IBOutlet weak private var opacityFiled: UITextField!
+    @IBOutlet weak private var previewColor: UIView!
+    @IBOutlet weak private var redColorSlider: UISlider!
+    @IBOutlet weak private var greenColorSlider: UISlider!
+    @IBOutlet weak private var blueColorSlider: UISlider!
+    @IBOutlet weak private var opacitySlider: UISlider!
     
     // Actions
-    @IBAction func redColorFieldSet(_ sender: UITextField) {
+    @IBAction private func redColorFieldSet(_ sender: UITextField) {
         redColorSlider.value = Services.rgbConvert(sender.text)
         setPreview()
         setHexField()
     }
-    @IBAction func greenColorFieldSet(_ sender: UITextField) {
+    @IBAction private func greenColorFieldSet(_ sender: UITextField) {
         greenColorSlider.value = Services.rgbConvert(sender.text)
         setPreview()
         setHexField()
     }
-    @IBAction func blueColorFieldSet(_ sender: UITextField) {
+    @IBAction private func blueColorFieldSet(_ sender: UITextField) {
         blueColorSlider.value = Services.rgbConvert(sender.text)
         setPreview()
         setHexField()
     }
-    @IBAction func hexColorFiledSet(_ sender: UITextField) {
-        setAllSlidersForHex()
+    @IBAction private func hexColorFiledSet(_ sender: UITextField) {
+            setAllSlidersForHex()
+            setPreview()
     }
-    @IBAction func opacityFiledSet(_ sender: UITextField) {
+    @IBAction private func opacityFiledSet(_ sender: UITextField) {
         opacitySlider.value = Services.rgbConvert(sender.text)
         setPreview()
         setHexField()
     }
-    @IBAction func opacitySliderSet(_ sender: UISlider) {
+    @IBAction private func opacitySliderSet(_ sender: UISlider) {
         opacityFiled.text = String((sender.value * 100).rounded() / 100)
         setPreview()
         setHexField()
     }
-    @IBAction func selectColorBtn(_ sender: UIButton) {
+    @IBAction private func selectColorBtn(_ sender: UIButton) {
         let color = ColorSettings(r: redColorSlider.value, g: greenColorSlider.value, b: blueColorSlider.value, a: opacitySlider.value)
         delegate?.changeColor(color)
     }
-    @IBAction func redSliderChange(_ sender: UISlider) {
+    @IBAction private func redSliderChange(_ sender: UISlider) {
         redColorField.text = String((sender.value * 100).rounded() / 100)
         setPreview()
         setHexField()
     }
-    @IBAction func greenSliderChange(_ sender: UISlider) {
+    @IBAction private func greenSliderChange(_ sender: UISlider) {
         greenColorField.text = String((sender.value * 100).rounded() / 100)
         setPreview()
         setHexField()
     }
-    @IBAction func blueSliderChange(_ sender: UISlider) {
+    @IBAction private func blueSliderChange(_ sender: UISlider) {
         blueColorField.text = String((sender.value * 100).rounded() / 100)
         setPreview()
         setHexField()
@@ -194,11 +211,10 @@ class ColorSetVC: UIViewController{
                 let red = ciColor.red
                 let green = ciColor.green
                 let blue = ciColor.blue
-                let alpha = ciColor.alpha
                 redColorSlider.value = Float(red)
                 greenColorSlider.value = Float(green)
                 blueColorSlider.value = Float(blue)
-                opacitySlider.value = Float(alpha)
+                opacitySlider.value = Float(1)
             }
         }
     }

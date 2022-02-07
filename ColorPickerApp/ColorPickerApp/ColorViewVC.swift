@@ -7,19 +7,19 @@
 
 import UIKit
 
-class ColorViewVC: UIViewController, ColorTransfer {
+final class ColorViewVC: UIViewController, ColorTransfer {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         noColorSet()
     }
     
-    var currentColor: ColorSettings?
+    private var currentColor: ColorSettings?
     
-    @IBOutlet weak var selectColorLabel: UILabel!
-    @IBOutlet weak var colorView: UIView!
+    @IBOutlet weak private var selectColorLabel: UILabel!
+    @IBOutlet weak private var colorView: UIView!
     
-    @IBAction func selectColorBtn(_ sender: UIButton) {
+    @IBAction private func selectColorBtn(_ sender: UIButton) {
         performSegue(withIdentifier: "GoToColorSet", sender: nil)
     }
     

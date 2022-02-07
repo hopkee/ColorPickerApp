@@ -67,7 +67,6 @@
         <!--Color SetVC-->
         <scene sceneID="5pu-NR-0dO">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0WU-fv-0e4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="ColorSetVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PAz-rN-Hfs" customClass="ColorSetVC" customModule="ColorPickerApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1aY-Ju-8rD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -182,17 +181,20 @@
                                                 <rect key="frame" x="0.0" y="228" width="344" height="34"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HEX Color #" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IOA-CZ-TP6">
-                                                        <rect key="frame" x="0.0" y="0.0" width="225.5" height="34"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="252" height="34"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vQa-eH-1Rm">
-                                                        <rect key="frame" x="242.5" y="0.0" width="101.5" height="34"/>
+                                                        <rect key="frame" x="269" y="0.0" width="75" height="34"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="75" id="fPU-2b-YRR"/>
+                                                        </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
                                                         <connections>
-                                                            <action selector="hexColorFiledSet:" destination="PAz-rN-Hfs" eventType="editingChanged" id="YHr-5v-X55"/>
+                                                            <action selector="hexColorFiledSet:" destination="PAz-rN-Hfs" eventType="editingChanged" id="1mp-sd-RkC"/>
                                                         </connections>
                                                     </textField>
                                                 </subviews>
@@ -293,6 +295,7 @@
                         <outlet property="redColorSlider" destination="zHK-m2-T8p" id="rXN-5I-xJz"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0WU-fv-0e4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1637.68115942029" y="93.75"/>
         </scene>
